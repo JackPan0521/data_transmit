@@ -2,26 +2,36 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/schedule_item.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 /// Firebase 行程管理服務
 class CalendarFirebaseService {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  static final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  /// 獲取當前用戶 UID，如果未登入則返回空字符串
+  static String get _currentUserId {
+    return _auth.currentUser?.uid ?? '';
+  }
 
   /// 從 Firebase 載入指定日期的行程
   static Future<List<ScheduleItem>> loadSchedules(DateTime selectedDay) async {
     try {
-      // 將日期轉換為 Firebase 路徑格式
-      final year = selectedDay.year.toString();
-      final month = selectedDay.month.toString().padLeft(2, '0');
-      final day = selectedDay.day.toString().padLeft(2, '0');
+      // 檢查是否有用戶登入
+      if (_currentUserId.isEmpty) {
+        throw Exception('使用者未登入');
+      }
       
-      // 建構文檔路徑到 task_list：tasks/2025/08/04
-      final basePath = 'tasks/$year/$month/$day';
+      // 生成日期格式字符串: yyyy-MM-dd
+      final dateString = generateDateString(selectedDay);
       
-      // 讀取 task_list subcollection
+      // 建構新的文檔路徑: Tasks/uid/task_list/year-month-day/tasks
+      final basePath = 'Tasks/$_currentUserId/task_list/$dateString';
+      
+      // 讀取 tasks 集合
       final snapshot = await _firestore
           .doc(basePath)
-          .collection('task_list')
+          .collection('tasks')
           .get();
     
       if (snapshot.docs.isNotEmpty) {
@@ -60,6 +70,7 @@ class CalendarFirebaseService {
       }
       
     } catch (e) {
+      print('載入行程失敗: $e');
       rethrow;
     }
   }
@@ -73,42 +84,58 @@ class CalendarFirebaseService {
     required DateTime endTime,
   }) async {
     try {
-      final year = selectedDay.year.toString();
-      final month = selectedDay.month.toString().padLeft(2, '0');
-      final day = selectedDay.day.toString().padLeft(2, '0');
+      // 檢查是否有用戶登入
+      if (_currentUserId.isEmpty) {
+        throw Exception('使用者未登入');
+      }
       
-      final basePath = 'tasks/$year/$month/$day';
+      // 生成日期格式字符串
+      final dateString = generateDateString(selectedDay);
       
-      // 先取得目前的行程數量來決定 index
+      // 新路徑格式
+      final basePath = 'Tasks/$_currentUserId/task_list/$dateString';
+      
+      // 先取得目前的行程數量來決定 task_number
       final existingTasks = await _firestore
           .doc(basePath)
-          .collection('task_list')
+          .collection('tasks')
           .get();
     
-      final newIndex = existingTasks.docs.length;
+      final newTaskNumber = existingTasks.docs.length + 1;
       
       // 新增行程
       await _firestore
           .doc(basePath)
-          .collection('task_list')
-          .add({
+          .collection('tasks')
+          .doc('task_$newTaskNumber') // 使用 task_1, task_2 等格式
+          .set({
         'name': name,
         'desc': desc,
         'startTime': Timestamp.fromDate(startTime),
         'endTime': Timestamp.fromDate(endTime),
-        'index': newIndex,
+        'index': newTaskNumber - 1,
       });
       
     } catch (e) {
+      print('新增行程失敗: $e');
       rethrow;
     }
   }
 
-  /// 生成日期路徑字符串
-  static String generateDatePath(DateTime date) {
+  /// 生成日期字符串，格式為 yyyy-MM-dd
+  static String generateDateString(DateTime date) {
     final year = date.year.toString();
     final month = date.month.toString().padLeft(2, '0');
     final day = date.day.toString().padLeft(2, '0');
-    return 'tasks/$year/$month/$day';
+    return '$year-$month-$day';
+  }
+
+  /// 生成完整路徑字符串
+  static String generateFullPath(DateTime date) {
+    if (_currentUserId.isEmpty) {
+      throw Exception('使用者未登入');
+    }
+    final dateString = generateDateString(date);
+    return 'Tasks/$_currentUserId/task_list/$dateString';
   }
 }

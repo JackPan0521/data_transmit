@@ -87,7 +87,8 @@ class ScheduleDialogs {
                 await service.updateSchedule(
                   updated.id,
                   updated.startTime!,
-                  updated,
+                  updated.endTime! as String,
+                  descController.text as Map<String, dynamic>,
                 );
 
                 if (context.mounted) {

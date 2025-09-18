@@ -122,10 +122,13 @@ class _DailySchedulePageState extends State<DailySchedulePage> {
 
   @override
   Widget build(BuildContext context) {
-    if (!isLoading) {
+    if (isLoading) {
       developer.log('🏗️ 準備建構 TimelineView，傳入資料：');
       for (final schedule in scheduleList) {
-        developer.log('  - ${schedule.description}: ${schedule.timeRange} (${schedule.endTime!.difference(schedule.startTime!).inMinutes}分鐘)');
+        final durationMinutes = (schedule.startTime != null && schedule.endTime != null) 
+            ? schedule.endTime!.difference(schedule.startTime!).inMinutes 
+            : 0;
+        developer.log('  - ${schedule.description}: ${schedule.timeRange} ($durationMinutes分鐘)');
       }
     }
 

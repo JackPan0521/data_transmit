@@ -48,4 +48,5 @@ class TimelineView extends StatelessWidget {
       ],
     );
   }
+
 }

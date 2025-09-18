@@ -1,13 +1,15 @@
 class ScheduleUtils {
+  /// 格式化日期為 yyyy-MM-dd 格式
   static String formatDate(DateTime date) {
-    return '${date.year}年${date.month}月${date.day}日';
-  }
-
-  static String formatDateKey(DateTime date) {
     final year = date.year.toString();
     final month = date.month.toString().padLeft(2, '0');
     final day = date.day.toString().padLeft(2, '0');
-    return 'tasks/$year/$month/$day';
+    return '$year-$month-$day';
+  }
+
+  static String formatDateKey(DateTime date) {
+    // 使用與 formatDate 相同的格式，因為現在我們使用 yyyy-MM-dd 作為文檔 ID
+    return formatDate(date);
   }
 
   static String formatTime(DateTime time) {

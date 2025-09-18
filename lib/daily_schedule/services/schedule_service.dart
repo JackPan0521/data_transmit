@@ -1,67 +1,134 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:developer' as developer;
 
 import '../models/schedule_model.dart';
-import '../utils/schedule_utils.dart';
 
 class ScheduleService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  /// 更新行程
-  Future<void> updateSchedule(String uid, DateTime date, ScheduleModel schedule) async {
-    try {
-      final dateKey = ScheduleUtils.formatDateKey(date);
-      await _firestore
-          .collection('Tasks')
-          .doc(uid)
-          .collection('task_list')
-          .doc(dateKey)
-          .collection('tasks')
-          .doc(schedule.id)
-          .update({
-        'desc': schedule.description,
-        'startTime': schedule.startTime,
-        'endTime': schedule.endTime,
-        'index': schedule.index,
-      });
-      developer.log('✅ 更新行程成功');
-    } catch (e) {
-      developer.log('❌ 更新行程失敗：$e');
-      rethrow;
-    }
+  /// 獲取當前用戶 UID，如果未登入則返回空字符串
+  String get _currentUserId {
+    return _auth.currentUser?.uid ?? '';
   }
 
   /// 讀取某天所有行程
-  Future<List<ScheduleModel>> loadDaySchedules(String uid, DateTime selectedDate) async {
+  Future<List<ScheduleModel>> loadDaySchedules(String dateString, DateTime selectedDate) async {
     try {
-      final dateKey = ScheduleUtils.formatDateKey(selectedDate);
-      developer.log('🔍 載入日行程：$dateKey');
+      // 檢查用戶是否已登入
+      if (_currentUserId.isEmpty) {
+        throw Exception('使用者未登入');
+      }
+
+      developer.log('🔍 載入日行程：$dateString');
+
+      // 使用新的路徑格式獲取文檔
       final snapshot = await _firestore
           .collection('Tasks')
-          .doc(uid)
+          .doc(_currentUserId)
           .collection('task_list')
-          .doc(dateKey)
+          .doc(dateString)
           .collection('tasks')
-          .orderBy('startTime')
           .get();
 
-      final schedules = snapshot.docs.map((doc) {
-        return ScheduleModel.fromFirestore(doc, selectedDate);
-      }).toList();
+      final List<ScheduleModel> schedules = [];
 
-      // 客戶端再次排序
-      schedules.sort((a, b) {
-        if (a.startTime != null && b.startTime != null) {
-          return a.startTime!.compareTo(b.startTime!);
+      for (var doc in snapshot.docs) {
+        try {
+          final Map<String, dynamic> data = doc.data();
+          
+          // 從 Firestore 文檔中獲取時間資料
+          DateTime? startTime;
+          DateTime? endTime;
+          
+          // 處理 startTime - 支援多種格式
+          final startData = data['startTime'];
+          if (startData is Timestamp) {
+            startTime = startData.toDate();
+          } else if (startData is String) {
+            try {
+              if (startData.contains('T') || startData.contains('-')) {
+                // 完整日期時間格式，例如 "2025-09-18T12:00:00"
+                startTime = DateTime.parse(startData);
+              } else if (startData.contains(':')) {
+                // 只有時間部分，例如 "12:00"
+                final timeParts = startData.split(':');
+                if (timeParts.length >= 2) {
+                  final hour = int.tryParse(timeParts[0]) ?? 0;
+                  final minute = int.tryParse(timeParts[1]) ?? 0;
+                  startTime = DateTime(
+                    selectedDate.year,
+                    selectedDate.month,
+                    selectedDate.day,
+                    hour,
+                    minute,
+                  );
+                }
+              }
+            } catch (e) {
+              developer.log('⚠️ 無法解析 startTime 字符串: $startData，錯誤: $e');
+            }
+          }
+          
+          // 處理 endTime - 支援多種格式
+          final endData = data['endTime'];
+          if (endData is Timestamp) {
+            endTime = endData.toDate();
+          } else if (endData is String) {
+            try {
+              if (endData.contains('T') || endData.contains('-')) {
+                // 完整日期時間格式
+                endTime = DateTime.parse(endData);
+              } else if (endData.contains(':')) {
+                // 只有時間部分，例如 "12:30"
+                final timeParts = endData.split(':');
+                if (timeParts.length >= 2) {
+                  final hour = int.tryParse(timeParts[0]) ?? 0;
+                  final minute = int.tryParse(timeParts[1]) ?? 0;
+                  endTime = DateTime(
+                    selectedDate.year,
+                    selectedDate.month,
+                    selectedDate.day,
+                    hour,
+                    minute,
+                  );
+                }
+              }
+            } catch (e) {
+              developer.log('⚠️ 無法解析 endTime 字符串: $endData，錯誤: $e');
+            }
+          }
+          
+          schedules.add(
+            ScheduleModel(
+              id: doc.id,
+              name: data['name'] ?? '',
+              description: data['desc'] ?? '',
+              startTime: startTime,
+              endTime: endTime,
+              hasOverlap: data['hasOverlap'] ?? false,
+              index: data['index'] ?? 0,
+            ),
+          );
+        } catch (e) {
+          developer.log('⚠️ 解析行程失敗: $e，文檔ID: ${doc.id}');
         }
-        if (a.startTime != null) return -1;
-        if (b.startTime != null) return 1;
-        return a.index.compareTo(b.index);
+      }
+
+      // 根據開始時間排序
+      schedules.sort((a, b) {
+        if (a.startTime == null && b.startTime == null) {
+          return 0;
+        } else if (a.startTime == null) {
+          return 1;
+        } else if (b.startTime == null) {
+          return -1;
+        }
+        return a.startTime!.compareTo(b.startTime!);
       });
 
-      _checkForOverlaps(schedules);
-
-      developer.log('✅ 載入完成，共 ${schedules.length} 筆日行程');
+      developer.log('✅ 載入完成，共 ${schedules.length} 筆行程');
       return schedules;
     } catch (e) {
       developer.log('❌ 載入日行程失敗：$e');
@@ -70,33 +137,55 @@ class ScheduleService {
   }
 
   /// 刪除行程
-  Future<void> deleteSchedule(String uid, DateTime date, String scheduleId) async {
+  Future<void> deleteSchedule(String dateString, DateTime selectedDate, String scheduleId) async {
     try {
-      final dateKey = ScheduleUtils.formatDateKey(date);
+      // 檢查用戶是否已登入
+      if (_currentUserId.isEmpty) {
+        throw Exception('使用者未登入');
+      }
+
       await _firestore
           .collection('Tasks')
-          .doc(uid)
+          .doc(_currentUserId)
           .collection('task_list')
-          .doc(dateKey)
+          .doc(dateString)
           .collection('tasks')
           .doc(scheduleId)
           .delete();
-      developer.log('✅ 刪除行程成功');
+      
+      developer.log('✅ 行程已刪除: $scheduleId');
     } catch (e) {
       developer.log('❌ 刪除行程失敗：$e');
       rethrow;
     }
   }
 
-  void _checkForOverlaps(List<ScheduleModel> schedules) {
-    for (int i = 0; i < schedules.length; i++) {
-      schedules[i].hasOverlap = false;
-      for (int j = 0; j < schedules.length; j++) {
-        if (i != j && schedules[i].overlapsWith(schedules[j])) {
-          schedules[i].hasOverlap = true;
-          break;
-        }
+  /// 更新行程
+  Future<void> updateSchedule(
+    String dateString, 
+    DateTime selectedDate,
+    String scheduleId, 
+    Map<String, dynamic> data
+  ) async {
+    try {
+      // 檢查用戶是否已登入
+      if (_currentUserId.isEmpty) {
+        throw Exception('使用者未登入');
       }
+
+      await _firestore
+          .collection('Tasks')
+          .doc(_currentUserId)
+          .collection('task_list')
+          .doc(dateString)
+          .collection('tasks')
+          .doc(scheduleId)
+          .update(data);
+      
+      developer.log('✅ 行程已更新: $scheduleId');
+    } catch (e) {
+      developer.log('❌ 更新行程失敗：$e');
+      rethrow;
     }
   }
 }

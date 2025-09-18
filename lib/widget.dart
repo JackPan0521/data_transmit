@@ -81,7 +81,6 @@ class _InputSectionState extends State<InputSection> {
     };
 
     // 1. _handleSubmit
-    print('[_handleSubmit] data: $data');
 
     widget.onSubmit(data);
 
