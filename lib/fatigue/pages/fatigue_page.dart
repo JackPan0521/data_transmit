@@ -41,7 +41,7 @@ class _FatiguePageState extends State<FatiguePage> {
   Future<void> loadFatigueData() async {
     try {
     final query = await FirebaseFirestore.instance
-      .collection('users')
+      .collection('profile')
       .doc(userId)
       .collection('fatigue_logs')
       .doc(docId)
@@ -67,7 +67,7 @@ class _FatiguePageState extends State<FatiguePage> {
           fatigueData.map((e) => e.toDouble()).toList();
 
       await FirebaseFirestore.instance
-          .collection('users')
+          .collection('profile')
           .doc(userId)
           .collection('fatigue_logs')
           .doc(docId)
@@ -82,13 +82,18 @@ class _FatiguePageState extends State<FatiguePage> {
 
   // 重畫（清空繪圖區與數據，並同步雲端歸零）
   Future<void> redrawFatigueChart() async {
-    setState(() {
-      fatigueData = List.filled(24, 0.0);
-    });
-    chartKey.currentState?.resetChart();
     try {
+      // 1. 先重置本地數據
+      setState(() {
+        fatigueData = List.filled(24, 0.0);
+      });
+      
+      // 2. 重置圖表
+      chartKey.currentState?.resetChart();
+      
+      // 3. 同步到雲端 (await 確保完成)
       await FirebaseFirestore.instance
-          .collection('users')
+          .collection('profile')
           .doc(userId)
           .collection('fatigue_logs')
           .doc(docId)
@@ -96,8 +101,9 @@ class _FatiguePageState extends State<FatiguePage> {
         'values': List.filled(24, 0.0),
         'timestamp': FieldValue.serverTimestamp(),
       }, SetOptions(merge: true));
+      
     } catch (e) {
-      showMessage('雲端歸零失敗：$e');
+      showMessage('重置失敗：$e');
     }
   }
 
@@ -134,19 +140,37 @@ class _FatiguePageState extends State<FatiguePage> {
       buildActionButton(
         label: '查看數據',
         onPressed: () async {
+          // 將當前最新的數據傳給詳細頁面
           final result = await Navigator.push<List<double>>(
             context,
             MaterialPageRoute(
               builder: (context) => FatigueDisplayPage(
                 intelligenceType: widget.intelligenceType,
-                initialFatigueData: List<double>.from(fatigueData),
+                initialFatigueData: List<double>.from(fatigueData), // 確保傳遞的是深複製
               ),
             ),
           );
+          
+          // 如果有返回結果，更新本地數據和圖表
           if (result != null) {
             setState(() {
               fatigueData = result;
             });
+            
+            // 同步到雲端
+            try {
+              await FirebaseFirestore.instance
+                  .collection('profile')
+                  .doc(userId)
+                  .collection('fatigue_logs')
+                  .doc(docId)
+                  .set({
+                'values': fatigueData,
+                'timestamp': FieldValue.serverTimestamp(),
+              }, SetOptions(merge: true));
+            } catch (e) {
+              showMessage('數據同步失敗：$e');
+            }
           }
         },
         color: Colors.blue,
@@ -219,7 +243,7 @@ class FatigueDisplayPageState extends State<FatigueDisplayPage> {
     try {
       String docId = 'fatigue_${widget.intelligenceType}';
       await FirebaseFirestore.instance
-          .collection('users')
+          .collection('profile')
           .doc(userId)
           .collection('fatigue_logs')
           .doc(docId)
@@ -240,7 +264,7 @@ class FatigueDisplayPageState extends State<FatigueDisplayPage> {
       String docId = 'fatigue_${widget.intelligenceType}'; // 根據智能類型組成文檔 ID
 
       final doc = await FirebaseFirestore.instance
-          .collection('users')
+          .collection('profile')
           .doc(userId)
           .collection('fatigue_logs')
           .doc(docId)
@@ -262,10 +286,14 @@ class FatigueDisplayPageState extends State<FatigueDisplayPage> {
   @override
   void initState() {
     super.initState();
-  fatigueData = widget.initialFatigueData != null
-    ? List<double>.from(widget.initialFatigueData!)
-    : List.filled(24, 0.0);
-  loadFatigueData();
+  
+    // 優先使用傳入的初始數據，如果有的話
+    if (widget.initialFatigueData != null) {
+      fatigueData = List<double>.from(widget.initialFatigueData!);
+    } else {
+      // 只有在沒有初始數據時才從 Firebase 加載
+      loadFatigueData();
+    }
   }
 
   @override
