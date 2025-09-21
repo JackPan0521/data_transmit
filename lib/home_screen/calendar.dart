@@ -81,14 +81,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   void _handleMenuSelection(String value) {
     switch (value) {
       case 'add_schedule':
-        // 新增行程 - 如果沒有選擇日期，使用當天
-        final targetDate = _selectedDay ?? DateTime.now();
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ScheduleCreationPage(selectedDay: targetDate),
-          ),
-        );
+        print("新增行程");
         break;
       case 'add_schedule_auto_time_selected':
         // 新增自由行程 - 如果沒有選擇日期，使用當天
