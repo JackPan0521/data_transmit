@@ -88,7 +88,7 @@ class _AIRecommendationPageState extends State<AIRecommendationPage> {
     final result = await TaskModel.selectTimeForTask(
       context: context,
       taskData: taskData,
-      selectedDate: widget.selectedDate,
+      defaultDate: widget.selectedDate, // 作為 fallback 日期
     );
 
     if (result != null && mounted) {
@@ -99,7 +99,10 @@ class _AIRecommendationPageState extends State<AIRecommendationPage> {
           selectedTasks.add(result);
         }
       });
-      _showMessage("已${existingIndex != null ? '更新' : '選擇'} ${result.eventName}");
+      
+      final dateStr = result.formattedDate;
+      final weekday = result.weekdayName;
+      _showMessage("已${existingIndex != null ? '更新' : '選擇'} ${result.eventName} 至 $dateStr ($weekday)");
     }
   }
 
@@ -125,12 +128,11 @@ class _AIRecommendationPageState extends State<AIRecommendationPage> {
     }
 
     try {
-      // 上傳數據到後端
+      // 上傳數據到後端（移除 selectedDate 參數）
       await _aiService.submitScheduleData(
         selectedTasks: selectedTasks,
         planJson: planJson,
-        selectedDate: widget.selectedDate,
-        userId: currentUser.uid,
+        userId: currentUser.uid, selectedDate: widget.selectedDate,
       );
 
       // 轉換格式並回調
@@ -140,8 +142,12 @@ class _AIRecommendationPageState extends State<AIRecommendationPage> {
         widget.onSchedulesSelected!(schedulesToAdd);
       }
 
+      // 計算涉及的日期數量
+      final uniqueDates = selectedTasks.map((task) => task.formattedDate).toSet();
+      final daysCount = uniqueDates.length;
+
       if (mounted) {
-        _showMessage("✅ 行程已同步到雲端並完成自動排程");
+        _showMessage("✅ 已同步 $daysCount 天的行程到雲端並完成自動排程");
         Navigator.pop(context, schedulesToAdd);
       }
     } catch (e) {
