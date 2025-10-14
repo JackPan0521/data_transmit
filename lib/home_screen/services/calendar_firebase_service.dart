@@ -107,7 +107,7 @@ class CalendarFirebaseService {
       await _firestore
           .doc(basePath)
           .collection('tasks')
-          .doc('task_$newTaskNumber') // 使用 task_1, task_2 等格式
+          .doc('$newTaskNumber') // 只使用數字格式 1, 2, 3...
           .set({
         'name': name,
         'desc': desc,

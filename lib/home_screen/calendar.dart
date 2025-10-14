@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print
 
+import 'package:data_transmit/schedule_creation/manual_schedule_page_temp.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'custom_bottom_app_bar.dart';
@@ -81,17 +82,48 @@ class _CalendarScreenState extends State<CalendarScreen> {
   void _handleMenuSelection(String value) {
     switch (value) {
       case 'add_schedule':
-        print("新增行程");
+        // 新增行程 - 需要先選擇日期
+        if (_selectedDay == null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('請先選擇日期'),
+              backgroundColor: Colors.orange,
+              duration: Duration(seconds: 2),
+            ),
+          );
+          return;
+        }
+        
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ManualSchedulePage(
+              selectedDay: _selectedDay!,
+            ),
+          ),
+        ).then((result) {
+          // 如果有新增行程，重新載入
+          if (result == true) {
+            _loadSchedules();
+          }
+        });
         break;
       case 'add_schedule_auto_time_selected':
-        // 新增自由行程 - 如果沒有選擇日期，使用當天
+        // 新增自由行程 - 使用原本的 ScheduleCreationPage
         final targetDate = _selectedDay ?? DateTime.now();
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ScheduleCreationPage(selectedDay: targetDate),
+            builder: (context) => ScheduleCreationPage(
+              selectedDay: targetDate,
+            ),
           ),
-        );
+        ).then((_) {
+          // 返回後重新載入行程
+          if (_selectedDay != null) {
+            _loadSchedules();
+          }
+        });
         break;
       case 'ai_recommend':
         // AI 推薦行程 - 會自動處理未選擇日期的情況
