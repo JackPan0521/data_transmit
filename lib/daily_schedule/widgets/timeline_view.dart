@@ -7,16 +7,14 @@ class TimelineView extends StatelessWidget {
   final List<ScheduleModel> scheduleList;
   final ScrollController scrollController;
   final DateTime selectedDate;
-  final Function(ScheduleModel) onEditSchedule;
-  final Function(ScheduleModel) onDeleteSchedule;
+  final VoidCallback onScheduleUpdated;
 
   const TimelineView({
     super.key,
     required this.scheduleList,
     required this.scrollController,
     required this.selectedDate,
-    required this.onEditSchedule,
-    required this.onDeleteSchedule,
+    required this.onScheduleUpdated,
   });
 
   @override
@@ -38,8 +36,8 @@ class TimelineView extends StatelessWidget {
                   hourHeight,
                   timelineWidth,
                   context,
-                  onEditSchedule,
-                  onDeleteSchedule,
+                  selectedDate,
+                  onScheduleUpdated,
                 ),
               ],
             ),

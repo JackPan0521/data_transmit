@@ -83,8 +83,8 @@ class TimelineUtils {
     double hourHeight,
     double timelineWidth,
     BuildContext context,
-    Function(ScheduleModel) onEditSchedule,
-    Function(ScheduleModel) onDeleteSchedule,
+    DateTime selectedDate,
+    VoidCallback onScheduleUpdated,
   ) {
     return scheduleList.asMap().entries.map((entry) {
       final index = entry.key;
@@ -106,8 +106,8 @@ class TimelineUtils {
         child: ScheduleBar(
           schedule: schedule,
           index: index,
-          onEditSchedule: onEditSchedule,
-          onDeleteSchedule: onDeleteSchedule,
+          selectedDate: selectedDate,
+          onScheduleUpdated: onScheduleUpdated,
         ),
       );
     }).toList();

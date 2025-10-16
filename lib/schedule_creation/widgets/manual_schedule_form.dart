@@ -185,11 +185,12 @@ class _TimeSelectionWidget extends StatelessWidget {
     final minutes = durationMinutes % 60;
     
     if (hours > 0 && minutes > 0) {
+      // ignore: unnecessary_brace_in_string_interps
       return '${hours}小時${minutes}分鐘';
     } else if (hours > 0) {
-      return '${hours}小時';
+      return '$hours小時';
     } else {
-      return '${minutes}分鐘';
+      return '$minutes分鐘';
     }
   }
 }

@@ -4,7 +4,6 @@ import 'dart:developer' as developer;
 import 'models/schedule_model.dart';
 import 'services/schedule_service.dart';
 import 'widgets/timeline_view.dart';
-import 'widgets/schedule_dialogs.dart';
 import 'utils/schedule_utils.dart';
 import '../schedule_creation/schedule_creation_page.dart'; // ✅ 修正：使用新的行程創建頁面
 
@@ -28,13 +27,11 @@ class _DailySchedulePageState extends State<DailySchedulePage> {
   final ScrollController _scrollController = ScrollController();
 
   late final ScheduleService _scheduleService;
-  late final ScheduleDialogs _dialogs;
 
   @override
   void initState() {
     super.initState();
     _scheduleService = ScheduleService();
-    _dialogs = ScheduleDialogs(context);
     _loadDaySchedules();
   }
 
@@ -157,8 +154,7 @@ class _DailySchedulePageState extends State<DailySchedulePage> {
               scheduleList: scheduleList,
               scrollController: _scrollController,
               selectedDate: widget.selectedDate,
-              onEditSchedule: _editSchedule,
-              onDeleteSchedule: _deleteSchedule,
+              onScheduleUpdated: _loadDaySchedules,
             ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -178,37 +174,5 @@ class _DailySchedulePageState extends State<DailySchedulePage> {
     );
   }
 
-  void _editSchedule(ScheduleModel schedule) {
-    _dialogs.showEditScheduleDialog(
-      schedule,
-      onSaved: _loadDaySchedules,
-    );
-  }
 
-  void _deleteSchedule(ScheduleModel schedule) {
-    _dialogs.showDeleteScheduleDialog(
-      schedule,
-      onConfirmed: () async {
-        try {
-          await _scheduleService.deleteSchedule(
-            ScheduleUtils.formatDate(widget.selectedDate),
-            widget.selectedDate,
-            schedule.id,
-          );
-          _loadDaySchedules();
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('行程已刪除')),
-            );
-          }
-        } catch (e) {
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('刪除失敗，請稍後再試')),
-            );
-          }
-        }
-      },
-    );
-  }
 }

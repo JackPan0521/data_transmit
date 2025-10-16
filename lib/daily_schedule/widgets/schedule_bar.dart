@@ -9,15 +9,15 @@ import '../utils/timeline_utils.dart';
 class ScheduleBar extends StatelessWidget {
   final ScheduleModel schedule;
   final int index;
-  final Function(ScheduleModel) onEditSchedule;
-  final Function(ScheduleModel) onDeleteSchedule;
+  final DateTime selectedDate;
+  final VoidCallback onScheduleUpdated;
 
   const ScheduleBar({
     super.key,
     required this.schedule,
     required this.index,
-    required this.onEditSchedule,
-    required this.onDeleteSchedule,
+    required this.selectedDate,
+    required this.onScheduleUpdated,
   });
 
   @override
@@ -37,7 +37,7 @@ class ScheduleBar extends StatelessWidget {
       // ✅ 修改：單次點擊就顯示選項對話框
       onTap: () {
         HapticFeedback.lightImpact();
-        ScheduleOptionsDialog.show(context, schedule, onEditSchedule, onDeleteSchedule);
+        ScheduleOptionsDialog.show(context, schedule, selectedDate, onScheduleUpdated);
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
@@ -73,7 +73,7 @@ class ScheduleBar extends StatelessWidget {
             // ✅ 修改：單次點擊顯示選項
             onTap: () {
               HapticFeedback.lightImpact();
-              ScheduleOptionsDialog.show(context, schedule, onEditSchedule, onDeleteSchedule);
+              ScheduleOptionsDialog.show(context, schedule, selectedDate, onScheduleUpdated);
             },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
