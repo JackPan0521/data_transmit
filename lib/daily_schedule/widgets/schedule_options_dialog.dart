@@ -7,18 +7,18 @@ import '../../home_screen/services/calendar_firebase_service.dart';
 
 class ScheduleOptionsDialog {
   static void show(
-    BuildContext context,
+    BuildContext outerContext,
     ScheduleModel schedule,
     DateTime selectedDate,
     VoidCallback onScheduleUpdated,
   ) {
     showModalBottomSheet(
-      context: context,
+      context: outerContext,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
-      builder: (context) => Container(
+      builder: (sheetContext) => Container(
         constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height * 0.35,
+          maxHeight: MediaQuery.of(outerContext).size.height * 0.35,
         ),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -39,8 +39,8 @@ class ScheduleOptionsDialog {
               _buildTitle(schedule),
               _buildTimeInfo(schedule),
               const SizedBox(height: 8),
-              _buildEditOption(context, schedule, selectedDate, onScheduleUpdated),
-              _buildDeleteOption(context, schedule, selectedDate, onScheduleUpdated),
+              _buildEditOption(outerContext, sheetContext, schedule, selectedDate, onScheduleUpdated),
+              _buildDeleteOption(outerContext, sheetContext, schedule, selectedDate, onScheduleUpdated),
               const SizedBox(height: 8),
             ],
           ),
@@ -88,7 +88,8 @@ class ScheduleOptionsDialog {
   }
 
   static Widget _buildEditOption(
-    BuildContext context,
+    BuildContext outerContext,
+    BuildContext sheetContext,
     ScheduleModel schedule,
     DateTime selectedDate,
     VoidCallback onScheduleUpdated,
@@ -98,9 +99,9 @@ class ScheduleOptionsDialog {
       title: '編輯行程',
       color: Colors.blue,
       onTap: () {
-        Navigator.pop(context);
+        Navigator.pop(sheetContext);
         showEditScheduleDialog(
-          context,
+          outerContext,
           schedule: schedule,
           selectedDate: selectedDate,
           onScheduleUpdated: onScheduleUpdated,
@@ -110,7 +111,8 @@ class ScheduleOptionsDialog {
   }
 
   static Widget _buildDeleteOption(
-    BuildContext context,
+    BuildContext outerContext,
+    BuildContext sheetContext,
     ScheduleModel schedule,
     DateTime selectedDate,
     VoidCallback onScheduleUpdated,
@@ -120,11 +122,11 @@ class ScheduleOptionsDialog {
       title: '刪除行程',
       color: Colors.red,
       onTap: () async {
-        Navigator.pop(context);
+        Navigator.pop(sheetContext);
         
         // 顯示刪除確認對話框
         final confirmed = await showDialog<bool>(
-          context: context,
+          context: outerContext,
           builder: (context) => AlertDialog(
             content: Column(
               mainAxisSize: MainAxisSize.min,
@@ -143,11 +145,11 @@ class ScheduleOptionsDialog {
             ),
             actions: [
               TextButton(
-                onPressed: () => Navigator.of(context).pop(false),
+                onPressed: () => Navigator.of(outerContext).pop(false),
                 child: const Text('取消'),
               ),
               ElevatedButton(
-                onPressed: () => Navigator.of(context).pop(true),
+                onPressed: () => Navigator.of(outerContext).pop(true),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,
                   foregroundColor: Colors.white,
@@ -158,10 +160,10 @@ class ScheduleOptionsDialog {
           ),
         );
 
-        if (confirmed == true && context.mounted) {
+        if (confirmed == true && outerContext.mounted) {
           // 顯示載入對話框
           showDialog(
-            context: context,
+            context: outerContext,
             barrierDismissible: false,
             builder: (context) => const AlertDialog(
               content: Row(
@@ -184,12 +186,12 @@ class ScheduleOptionsDialog {
               schedule.id,
             );
 
-            if (context.mounted) {
+            if (outerContext.mounted) {
               // 關閉載入對話框
-              Navigator.of(context).pop();
+              Navigator.of(outerContext).pop();
               
               // 顯示成功訊息
-              ScaffoldMessenger.of(context).showSnackBar(
+              ScaffoldMessenger.of(outerContext).showSnackBar(
                 const SnackBar(
                   content: Row(
                     children: [
@@ -206,12 +208,12 @@ class ScheduleOptionsDialog {
               onScheduleUpdated();
             }
           } catch (e) {
-            if (context.mounted) {
+            if (outerContext.mounted) {
               // 關閉載入對話框
-              Navigator.of(context).pop();
+              Navigator.of(outerContext).pop();
               
               // 顯示錯誤訊息
-              ScaffoldMessenger.of(context).showSnackBar(
+              ScaffoldMessenger.of(outerContext).showSnackBar(
                 SnackBar(
                   content: Row(
                     children: [
