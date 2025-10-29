@@ -4,6 +4,7 @@ class ManualScheduleForm extends StatelessWidget {
   final TextEditingController descriptionController;
   final TimeOfDay? selectedStartTime;
   final TimeOfDay? selectedEndTime;
+  final bool highlightOverlap;
   final bool isLoading;
   final VoidCallback onSelectStartTime;
   final VoidCallback onSelectEndTime;
@@ -14,6 +15,7 @@ class ManualScheduleForm extends StatelessWidget {
     required this.descriptionController,
     required this.selectedStartTime,
     required this.selectedEndTime,
+    this.highlightOverlap = false,
     required this.isLoading,
     required this.onSelectStartTime,
     required this.onSelectEndTime,
@@ -60,6 +62,7 @@ class ManualScheduleForm extends StatelessWidget {
               selectedEndTime: selectedEndTime,
               onSelectStartTime: onSelectStartTime,
               onSelectEndTime: onSelectEndTime,
+              highlightOverlap: highlightOverlap,
             ),
             const SizedBox(height: 30),
             
@@ -101,12 +104,14 @@ class _TimeSelectionWidget extends StatelessWidget {
   final TimeOfDay? selectedEndTime;
   final VoidCallback onSelectStartTime;
   final VoidCallback onSelectEndTime;
+  final bool highlightOverlap;
 
   const _TimeSelectionWidget({
     required this.selectedStartTime,
     required this.selectedEndTime,
     required this.onSelectStartTime,
     required this.onSelectEndTime,
+    this.highlightOverlap = false,
   });
 
   @override
@@ -148,19 +153,19 @@ class _TimeSelectionWidget extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.blue.shade50,
+                color: highlightOverlap ? Colors.red.shade50 : Colors.blue.shade50,
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.blue.shade200),
+                border: Border.all(color: highlightOverlap ? Colors.red.shade300 : Colors.blue.shade200),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.timer, size: 16, color: Colors.blue.shade600),
+                  Icon(Icons.timer, size: 16, color: highlightOverlap ? Colors.red.shade700 : Colors.blue.shade600),
                   const SizedBox(width: 8),
                   Text(
                     '持續時間：${_calculateDuration(selectedStartTime!, selectedEndTime!)}',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.blue.shade600,
+                      color: highlightOverlap ? Colors.red.shade700 : Colors.blue.shade600,
                       fontWeight: FontWeight.w500,
                     ),
                   ),

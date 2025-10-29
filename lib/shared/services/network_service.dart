@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:developer' as developer;
 
 class NetworkService {
-  static const String baseUrl = 'https://1b39113ffc61.ngrok-free.app/api/submit';
+  static const String baseUrl = 'https://984b86d3c4ee.ngrok-free.app/api/submit';
   static const int maxRetries = 3;
 
   Future<Map<String, dynamic>> sendData(Map<String, dynamic> data) async {

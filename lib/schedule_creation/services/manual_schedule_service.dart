@@ -74,4 +74,60 @@ class ManualScheduleService {
       time.minute,
     );
   }
+
+  // 檢查是否與已存在的行程重疊
+  // 回傳 null 表示沒有重疊，否則回傳錯誤訊息（會說明是開始或結束時間重疊）
+  static String? checkOverlapWithExisting({
+    required List<ScheduleItem> existingSchedules,
+    required DateTime candidateStart,
+    required DateTime candidateEnd,
+  }) {
+    // 收集重疊的描述
+    final List<String> startConflicts = [];
+    final List<String> endConflicts = [];
+    final List<String> genericConflicts = [];
+
+    for (final s in existingSchedules) {
+      final existingStart = s.startDateTime;
+      final existingEnd = s.endDateTime;
+
+      if (existingStart == null || existingEnd == null) continue;
+
+      // candidate start 在 existing 區間內
+      if ((candidateStart.isAtSameMomentAs(existingStart) || candidateStart.isAfter(existingStart)) && candidateStart.isBefore(existingEnd)) {
+        startConflicts.add('${s.desc} (${s.time})');
+      }
+
+      // candidate end 在 existing 區間內（包含等於 existingEnd）
+      if (candidateEnd.isAfter(existingStart) && (candidateEnd.isBefore(existingEnd) || candidateEnd.isAtSameMomentAs(existingEnd))) {
+        endConflicts.add('${s.desc} (${s.time})');
+      }
+
+      // existing 完全在 candidate 裡面（例如 candidate 包含 existing）
+      final existingStartsInsideCandidate = (existingStart.isAfter(candidateStart) || existingStart.isAtSameMomentAs(candidateStart)) && existingStart.isBefore(candidateEnd);
+      final existingEndsInsideCandidate = existingEnd.isAfter(candidateStart) && (existingEnd.isBefore(candidateEnd) || existingEnd.isAtSameMomentAs(candidateEnd));
+      if (existingStartsInsideCandidate || existingEndsInsideCandidate) {
+        // 這個情況 candidate 的開始或結束不一定落在 existing 內，但區間仍重疊，標為 generic
+        genericConflicts.add('${s.desc} (${s.time})');
+      }
+    }
+
+    // 組合訊息，優先指出開始/結束是哪個重疊
+    if (startConflicts.isNotEmpty || endConflicts.isNotEmpty || genericConflicts.isNotEmpty) {
+      final parts = <String>[];
+      if (startConflicts.isNotEmpty) {
+        parts.add('開始時間與現有行程重疊：${startConflicts.join('；')}');
+      }
+      if (endConflicts.isNotEmpty) {
+        parts.add('結束時間與現有行程重疊：${endConflicts.join('；')}');
+      }
+      if (genericConflicts.isNotEmpty && startConflicts.isEmpty && endConflicts.isEmpty) {
+        parts.add('行程與現有行程區間重疊：${genericConflicts.join('；')}');
+      }
+
+      return parts.join('\n');
+    }
+
+    return null;
+  }
 }

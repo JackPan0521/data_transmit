@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import '../models/task_model.dart';
 
 class AIRecommendationService {
-  static const String _baseUrl = "https://1b39113ffc61.ngrok-free.app/dick";
+  static const String _baseUrl = "https://984b86d3c4ee.ngrok-free.app/dick";
 
   /// 獲取 AI 推薦
   Future<Map<String, dynamic>> getRecommendation(String question) async {
@@ -21,7 +21,7 @@ class AIRecommendationService {
         'planJson': data["result"],
       };
     } else {
-      throw Exception("服務暫時無法使用，請稍後再試");
+      throw Exception("請重新輸入有關排成的指令");
     }
   }
 

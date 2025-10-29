@@ -26,6 +26,7 @@ class _ManualSchedulePageState extends State<ManualSchedulePage> {
   // 時間選擇變數
   TimeOfDay? _selectedStartTime;
   TimeOfDay? _selectedEndTime;
+  bool _currentSelectionHasOverlap = false;
   
   // 狀態變數
   bool _isLoading = false;
@@ -69,6 +70,8 @@ class _ManualSchedulePageState extends State<ManualSchedulePage> {
           scheduleList = schedules;
           isLoadingSchedules = false;
         });
+        // 更新重疊旗標（如果 start/end 已有選擇）
+        _updateOverlapFlag();
       }
     } catch (e) {
       if (mounted) {
@@ -113,6 +116,18 @@ class _ManualSchedulePageState extends State<ManualSchedulePage> {
 
     if (timeError != null) {
       _showSnackBar(timeError, Colors.red);
+      return;
+    }
+
+    // 檢查是否與現有行程重疊（開始/結束是否覆蓋到其他行程）
+    final overlapMsg = ManualScheduleService.checkOverlapWithExisting(
+      existingSchedules: scheduleList,
+      candidateStart: startDateTime,
+      candidateEnd: endDateTime,
+    );
+
+    if (overlapMsg != null) {
+      _showSnackBar(overlapMsg, Colors.orange);
       return;
     }
 
@@ -163,6 +178,8 @@ class _ManualSchedulePageState extends State<ManualSchedulePage> {
           _selectedEndTime = TimeUtils.adjustEndTime(picked);
         }
       });
+      // 更新重疊提示
+      _updateOverlapFlag();
     }
   }
 
@@ -180,7 +197,34 @@ class _ManualSchedulePageState extends State<ManualSchedulePage> {
       setState(() {
         _selectedEndTime = picked;
       });
+      // 更新重疊提示
+      _updateOverlapFlag();
     }
+  }
+
+  // 更新目前開始/結束時間是否與現有行程重疊的旗標
+  void _updateOverlapFlag() {
+    if (_selectedStartTime == null || _selectedEndTime == null) {
+      if (mounted) setState(() => _currentSelectionHasOverlap = false);
+      return;
+    }
+
+    final startDateTime = ManualScheduleService.createDateTime(
+      selectedDay: widget.selectedDay,
+      time: _selectedStartTime!,
+    );
+    final endDateTime = ManualScheduleService.createDateTime(
+      selectedDay: widget.selectedDay,
+      time: _selectedEndTime!,
+    );
+
+    final overlapMsg = ManualScheduleService.checkOverlapWithExisting(
+      existingSchedules: scheduleList,
+      candidateStart: startDateTime,
+      candidateEnd: endDateTime,
+    );
+
+    if (mounted) setState(() => _currentSelectionHasOverlap = overlapMsg != null);
   }
 
   void _showSnackBar(String message, Color color) {
@@ -216,6 +260,7 @@ class _ManualSchedulePageState extends State<ManualSchedulePage> {
                         descriptionController: _descriptionController,
                         selectedStartTime: _selectedStartTime,
                         selectedEndTime: _selectedEndTime,
+                        highlightOverlap: _currentSelectionHasOverlap,
                         isLoading: _isLoading,
                         onSelectStartTime: _selectStartTime,
                         onSelectEndTime: _selectEndTime,
