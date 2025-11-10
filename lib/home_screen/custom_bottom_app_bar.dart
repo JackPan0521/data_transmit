@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:data_transmit/fatigue/pages/flchart_fristpage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class CustomBottomAppBar extends StatelessWidget {
   const CustomBottomAppBar({
@@ -17,6 +18,44 @@ class CustomBottomAppBar extends StatelessWidget {
     FloatingActionButtonLocation.centerDocked,
     FloatingActionButtonLocation.centerFloat,
   ];
+
+  void _showAppInfoDialog(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+    final uid = user?.uid ?? '未登入';
+    // 作者名單或其他資訊：可依需求修改
+    const authors = [
+      'Jack Pan',
+      '其他作者 A',
+      '其他作者 B',
+    ];
+
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('相關資料'),
+        content: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('UID: $uid'),
+              const SizedBox(height: 12),
+              const Text('作者名單：', style: TextStyle(fontWeight: FontWeight.bold)),
+              const SizedBox(height: 6),
+              ...authors.map((a) => Text('• $a')),
+              const SizedBox(height: 12),
+              Text('版本：1.0.0'), // 可改為自動抓取版本
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text('關閉'),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +93,13 @@ class CustomBottomAppBar extends StatelessWidget {
                       ),
                     ),
                     PopupMenuItem(
+                      value: 'info',
+                      child: ListTile(
+                        leading: const Icon(Icons.info_outline),
+                        title: const Text('相關資料'),
+                      ),
+                    ),
+                    PopupMenuItem(
                       value: 'chart',
                       child: ListTile(
                         leading: const Icon(Icons.show_chart),
@@ -67,6 +113,8 @@ class CustomBottomAppBar extends StatelessWidget {
 
                 if (selected == 'settings') {
                   // 處理設定
+                } else if (selected == 'info') {
+                  _showAppInfoDialog(context);
                 } else if (selected == 'chart') {
                   Navigator.push(
                     context,
