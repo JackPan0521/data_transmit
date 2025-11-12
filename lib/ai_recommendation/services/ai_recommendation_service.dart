@@ -21,7 +21,7 @@ class AIRecommendationService {
         'planJson': data["result"],
       };
     } else {
-      throw Exception("請重新輸入有關排成的指令");
+      throw Exception("請重新輸入有關排程的指令");
     }
   }
 

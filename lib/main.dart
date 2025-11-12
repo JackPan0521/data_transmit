@@ -19,18 +19,20 @@ Future<String> getOrCreateUid() async {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  // debugShowCheckedModeBanner 是 MaterialApp 的屬性，不能放在這裡。
+  // 如需隱藏右上角的 Debug 標記，請在 MyApp（MaterialApp）中設定。
+ 
   try {
     developer.log("🚀 開始初始化 Firebase...", name: 'Firebase');
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
     developer.log("✅ Firebase 初始化成功！", name: 'Firebase');
-
+ 
     // 匿名登入並取得 uid
     final uid = await getOrCreateUid();
     developer.log('目前使用者的 UID：$uid', name: 'FirebaseAuth');
-
+ 
     runApp(const MyApp());
   } catch (e, stackTrace) {
     developer.log(
