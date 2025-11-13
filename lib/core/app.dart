@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
       ),
-      debugShowCheckedModeBanner: false, // <-- 在這裡設定
+      debugShowCheckedModeBanner: false,
       home: const CalendarScreen(),
     );
   }

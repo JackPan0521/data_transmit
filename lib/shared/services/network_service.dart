@@ -3,7 +3,8 @@ import 'dart:convert';
 import 'dart:developer' as developer;
 
 class NetworkService {
-  static const String baseUrl = 'https://984b86d3c4ee.ngrok-free.app/api/submit';
+  static const String baseUrlNumber = '984b86d3c4ee';
+  static const String baseUrl = 'https://$baseUrlNumber.ngrok-free.app/api/submit';
   static const int maxRetries = 3;
 
   Future<Map<String, dynamic>> sendData(Map<String, dynamic> data) async {
@@ -50,5 +51,9 @@ class NetworkService {
       'message': '🚫 連線失敗',
       'retryCount': maxRetries,
     };
+  }
+
+  String getBaseUrlNumber() {
+    return baseUrlNumber;
   }
 }

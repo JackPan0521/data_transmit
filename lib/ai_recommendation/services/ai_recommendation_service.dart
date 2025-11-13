@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/task_model.dart';
+import '../../shared/services/network_service.dart';
 
 class AIRecommendationService {
-  static const String _baseUrl = "https://984b86d3c4ee.ngrok-free.app/dick";
+  static const String _baseUrl = "https://${NetworkService.baseUrlNumber}.ngrok-free.app/dick";
 
   /// 獲取 AI 推薦
   Future<Map<String, dynamic>> getRecommendation(String question) async {
