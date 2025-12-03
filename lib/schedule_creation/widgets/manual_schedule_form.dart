@@ -163,7 +163,9 @@ class _TimeSelectionWidget extends StatelessWidget {
                   Icon(Icons.timer, size: 16, color: highlightOverlap ? Colors.red.shade700 : Colors.blue.shade600),
                   const SizedBox(width: 8),
                   Text(
-                    '持續時間：${_calculateDuration(selectedStartTime!, selectedEndTime!)}',
+                    highlightOverlap
+                        ? '有時間重疊'
+                        : '持續時間：${_calculateDuration(selectedStartTime!, selectedEndTime!)}',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: highlightOverlap ? Colors.red.shade700 : Colors.blue.shade600,
                       fontWeight: FontWeight.w500,

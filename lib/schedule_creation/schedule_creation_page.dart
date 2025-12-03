@@ -83,24 +83,117 @@ class _ScheduleCreationPageState extends State<ScheduleCreationPage> {
     return Column(
       children: [
         if (isReconnecting)
-          Text(
-            "🔄 正在重新連接... 第 $retryCount 次",
-            style: TextStyle(
-              color: Colors.orange.shade700,
-              fontSize: 16
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: Colors.orange.shade50,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.orange.shade300),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.orange.shade700),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  "正在重新連接... 第 $retryCount 次",
+                  style: TextStyle(
+                    color: Colors.orange.shade700,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
             ),
           ),
         const SizedBox(height: 10),
-        if (responseMsg.isNotEmpty)
-          Text(
-            responseMsg,
-            style: TextStyle(
-              color: Colors.blue.shade700,
-              fontSize: 14
+        if (!isReconnecting && responseMsg.isNotEmpty) // ← 只在不重連時顯示
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: _isSuccessMessage(responseMsg) 
+                  ? Colors.green.shade50 
+                  : Colors.red.shade50,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: _isSuccessMessage(responseMsg) 
+                    ? Colors.green.shade300 
+                    : Colors.red.shade300,
+              ),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  _isSuccessMessage(responseMsg) 
+                      ? Icons.check_circle 
+                      : Icons.error,
+                  color: _isSuccessMessage(responseMsg) 
+                      ? Colors.green.shade700 
+                      : Colors.red.shade700,
+                  size: 20,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    _formatMessage(responseMsg),
+                    style: TextStyle(
+                      color: _isSuccessMessage(responseMsg) 
+                          ? Colors.green.shade700 
+                          : Colors.red.shade700,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
       ],
     );
+  }
+
+  // 判斷是否為成功訊息（改進版：解析 JSON）
+  bool _isSuccessMessage(String msg) {
+    // 嘗試解析 JSON 格式的 success 欄位
+    if (msg.contains('"success"')) {
+      final successMatch = RegExp(r'"success"\s*:\s*(true|false)').firstMatch(msg);
+      if (successMatch != null) {
+        return successMatch.group(1) == 'true';
+      }
+    }
+    
+    // 備用判斷（若不是 JSON 格式）
+    return msg.contains('成功') || 
+           msg.contains('✅') || 
+           msg.toLowerCase().contains('success');
+  }
+
+  // 格式化訊息（移除 JSON 格式，只保留友善文字）
+  String _formatMessage(String msg) {
+    // 若訊息包含 JSON 格式，嘗試提取 message 欄位
+    if (msg.contains('"message"')) {
+      final messageMatch = RegExp(r'"message"\s*:\s*"([^"]+)"').firstMatch(msg);
+      if (messageMatch != null) {
+        return messageMatch.group(1) ?? msg;
+      }
+    }
+    
+    // 備用：移除多餘的 JSON 符號（若 regex 失敗）
+    return msg
+        .replaceAll('{', '')
+        .replaceAll('}', '')
+        .replaceAll('"', '')
+        .replaceAll('success:true,', '')
+        .replaceAll('success:false,', '')
+        .replaceAll('message:', '')
+        .trim();
   }
 
   Widget _buildScheduleList(DateTime selectedDate) {

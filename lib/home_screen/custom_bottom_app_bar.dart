@@ -25,8 +25,6 @@ class CustomBottomAppBar extends StatelessWidget {
     // 作者名單或其他資訊：可依需求修改
     const authors = [
       'Jack Pan',
-      '其他作者 A',
-      '其他作者 B',
     ];
 
     showDialog(
@@ -85,13 +83,13 @@ class CustomBottomAppBar extends StatelessWidget {
                     position.dy + button.size.height,
                   ),
                   items: [
-                    PopupMenuItem(
+                    /*PopupMenuItem(
                       value: 'settings',
                       child: ListTile(
                         leading: const Icon(Icons.settings),
                         title: const Text('設定'),
                       ),
-                    ),
+                    ),*/
                     PopupMenuItem(
                       value: 'info',
                       child: ListTile(
