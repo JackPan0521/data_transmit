@@ -1,3 +1,5 @@
+//自適應行程內容組件
+//根據可用空間自動調整行程內容的顯示，支持多種布局方式，供時間軸渲染使用
 import 'package:flutter/material.dart';
 
 import '../models/schedule_model.dart';

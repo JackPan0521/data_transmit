@@ -1,3 +1,5 @@
+//疲勞度圖表互動組件
+//主要功能：供用戶滑動繪製圖一天中每小時的疲勞度曲線、計算疲勞帤值、支持操縱、重置等功能
 import 'package:flutter/material.dart';
 import 'fatigue_chart_layout.dart';
 

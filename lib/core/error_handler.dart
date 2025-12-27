@@ -1,3 +1,5 @@
+//錯誤處理頁面
+//當應用初始化失敗時顯示錯誤信息和診斷提示
 import 'package:flutter/material.dart';
 
 class ErrorHandler extends StatelessWidget {

@@ -1,3 +1,5 @@
+//時間槽組件
+//顯示時間軸上每個小時的行程，支持編輯、刪除行程，是時間軸視圖的基本單位
 import 'package:flutter/material.dart';
 
 import '../models/schedule_model.dart';

@@ -1,3 +1,5 @@
+//疲勞度追蹤頁面
+//主要功能：展示用戶在不同智慧領域的疲勞度數據，支持圖表展示和數據編輯保存，用於分析用戶的疲勞狀況
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

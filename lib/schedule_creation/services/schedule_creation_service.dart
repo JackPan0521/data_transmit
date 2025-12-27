@@ -1,3 +1,5 @@
+//行程創建服務
+//主要功能：處理行程創建相關的業務邏輯，與 Firestore 通信保存新行程，支持時間格式化和導航
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:developer' as developer;

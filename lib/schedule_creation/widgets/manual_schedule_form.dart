@@ -1,3 +1,5 @@
+//手動行程表單組件
+//主要功能：供用戶輸入行程詳情、選擇開始和結束時間、提交添加行程、顯示時間衝突警告
 import 'package:flutter/material.dart';
 
 class ManualScheduleForm extends StatelessWidget {

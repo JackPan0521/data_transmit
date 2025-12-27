@@ -1,3 +1,5 @@
+//AI 輸入區塊組件
+//提供文本輸入框讓用戶描述行程需求，支持動畫展開和收合，以及提交按鈕
 import 'package:flutter/material.dart';
 
 class AIInputSection extends StatelessWidget {

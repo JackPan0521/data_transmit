@@ -1,3 +1,5 @@
+//已選擇行程展示組件
+//顯示用戶已選擇的行程列表，支持編輯和刪除功能，提供快速預覽每個任務的詳細信息
 import 'package:flutter/material.dart';
 import '../models/task_model.dart';
 

@@ -1,3 +1,5 @@
+//行程編輯對話框
+//主要功能：提供編輯行程詳情的對話框，用戶可修改行程名稱、描述、時間等，並直接保存到 Firebase
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/schedule_model.dart';

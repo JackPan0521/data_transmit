@@ -15,6 +15,7 @@ import 'package:flutter/foundation.dart'
 /// );
 /// ```
 class DefaultFirebaseOptions {
+  // === 根據當前平台返回對應的 Firebase 配置 ===
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
       return web;
@@ -40,6 +41,7 @@ class DefaultFirebaseOptions {
     }
   }
 
+  // === Web 平台配置 ===
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyDLkUjNQeNbbl0dHq1pawT51ne-IRsR_hc',
     appId: '1:933588607579:web:a8840e5674c474291ed57e',
@@ -49,6 +51,7 @@ class DefaultFirebaseOptions {
     storageBucket: 'task-focus-4i2ic.firebasestorage.app',
   );
 
+  // === Android 平台配置 ===
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyA2_fg5JiYj-Z8cQyqleBWXPQz-zF1UXrI',
     appId: '1:933588607579:android:0f425a1728704f5d1ed57e',
@@ -57,6 +60,7 @@ class DefaultFirebaseOptions {
     storageBucket: 'task-focus-4i2ic.firebasestorage.app',
   );
 
+  // === iOS 平台配置 ===
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyCJ_k6UsznF0j5AFRcnZA_AxQILYfh_BrY',
     appId: '1:933588607579:ios:a4a0e83cf9127c941ed57e',
@@ -67,6 +71,7 @@ class DefaultFirebaseOptions {
     iosBundleId: 'com.example.dataTransmit',
   );
 
+  // === macOS 平台配置 ===
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyCJ_k6UsznF0j5AFRcnZA_AxQILYfh_BrY',
     appId: '1:933588607579:ios:a4a0e83cf9127c941ed57e',
@@ -77,6 +82,7 @@ class DefaultFirebaseOptions {
     iosBundleId: 'com.example.dataTransmit',
   );
 
+  // === Windows 平台配置 ===
   static const FirebaseOptions windows = FirebaseOptions(
     apiKey: 'AIzaSyDLkUjNQeNbbl0dHq1pawT51ne-IRsR_hc',
     appId: '1:933588607579:web:a8840e5674c474291ed57e',

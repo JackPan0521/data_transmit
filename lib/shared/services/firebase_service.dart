@@ -1,3 +1,5 @@
+//共享 Firebase 服務
+//主要功能：提供應用全局的 Firebase 操作，如載入指定日期的行程、管理 Firestore 路徑結構
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:developer' as developer;

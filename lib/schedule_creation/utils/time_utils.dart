@@ -1,3 +1,5 @@
+//時間工具類
+//提供時間計算功能，包括計算持續時間、智能調整結束時間、驗證時間範圍等功能
 import 'package:flutter/material.dart';
 
 class TimeUtils {

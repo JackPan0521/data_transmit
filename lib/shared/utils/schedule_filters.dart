@@ -1,3 +1,5 @@
+//行程篩選工具類
+//提供行程數據管理功能，幫助篩選有效行程、過濾無效數據
 import '../../home_screen/models/schedule_item.dart';
 
 /// 判斷行程是否有效（desc 與 time 皆不為空）

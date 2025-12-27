@@ -1,3 +1,5 @@
+//日程表頁面
+//主要功能：展示選定日期的所有行程，支持時間軸視圖、行程編輯、刪除、新增等操作，顯示行程時間衝突警告
 import 'package:flutter/material.dart';
 import 'dart:developer' as developer;
 

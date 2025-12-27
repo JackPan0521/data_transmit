@@ -1,3 +1,5 @@
+//時間軸視圖組件
+//顯示日程表的時間軸視圖，支持滑動瀏覽、行程編輯、刪除、時間衝突警告等功能
 import 'package:flutter/material.dart';
 
 import '../models/schedule_model.dart';

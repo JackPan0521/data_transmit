@@ -15,17 +15,19 @@ class InputSection extends StatefulWidget {
 }
 
 class _InputSectionState extends State<InputSection> {
-  TimeOfDay? _ts;
-  TimeOfDay? _te;
-  final _nController = TextEditingController();
+  // === 狀態變數定義 ===
+  TimeOfDay? _ts; // 開始時間
+  TimeOfDay? _te; // 結束時間
+  final _nController = TextEditingController(); // 任務個數輸入控制器
 
-  int _taskCount = 0;
-  List<double> _kValues = [];
-  List<TextEditingController> _descControllers = [];
-  int _visibleTaskCount = 1;
+  int _taskCount = 0; // 任務總數
+  List<double> _kValues = []; // 每個任務的持續時間（分鐘）
+  List<TextEditingController> _descControllers = []; // 每個任務的描述控制器
+  int _visibleTaskCount = 1; // 當前顯示的任務輸入框數量
 
   int? _selectedRecommend; // 0: 第一組, 1: 第二組, null: 都沒選
 
+  // === 更新任務數量和相關的狀態值 ===
   void _updateSliders(int count) {
     setState(() {
       _taskCount = count;
@@ -38,6 +40,7 @@ class _InputSectionState extends State<InputSection> {
     });
   }
 
+  // === 開啟時間選擇對話框 ===
   Future<void> _pickTime(BuildContext context, bool isStart) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
@@ -55,6 +58,7 @@ class _InputSectionState extends State<InputSection> {
     }
   }
 
+  // === 驗證並提交表單數據 ===
   void _handleSubmit() {
     final n = int.tryParse(_nController.text.trim());
 
@@ -95,11 +99,14 @@ class _InputSectionState extends State<InputSection> {
     });
   }
 
+  // === 構建用戶界面 ===
   @override
   Widget build(BuildContext context) {
+    // 時間顯示文本
     final tsDisplay = _ts == null ? '選擇開始時間' : _ts!.format(context);
     final teDisplay = _te == null ? '選擇結束時間' : _te!.format(context);
 
+    // 推薦時間配置
     const recommendedStart1 = TimeOfDay(hour: 8, minute: 0);
     const recommendedEnd1 = TimeOfDay(hour: 22, minute: 0);
     const recommendedStart2 = TimeOfDay(hour: 9, minute: 0);
@@ -110,6 +117,7 @@ class _InputSectionState extends State<InputSection> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // === 時間選擇區塊 ===
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -127,6 +135,7 @@ class _InputSectionState extends State<InputSection> {
             ],
           ),
           const SizedBox(height: 12),
+          // === 推薦時間區塊（帶動畫效果） ===
           AnimatedContainer(
             duration: const Duration(milliseconds: 400),
             height: _selectedRecommend == null ? 48 : 0, // 推薦時間區塊高度
@@ -176,6 +185,7 @@ class _InputSectionState extends State<InputSection> {
             ),
           ),
           const SizedBox(height: 8),
+          // === 任務個數輸入區塊 ===
           TextField(
             controller: _nController,
             decoration: const InputDecoration(
@@ -199,6 +209,7 @@ class _InputSectionState extends State<InputSection> {
             },
           ),
           const SizedBox(height: 20),
+          // === 任務詳情輸入區塊（動態生成） ===
           for (
             int i = 0;
             i < _visibleTaskCount &&
@@ -244,6 +255,7 @@ class _InputSectionState extends State<InputSection> {
               ),
             ),
           const SizedBox(height: 20),
+          // === 提交按鈕區塊 ===
           Center(
             child: ElevatedButton(
               onPressed: _handleSubmit,

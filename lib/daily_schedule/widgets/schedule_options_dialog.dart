@@ -1,3 +1,5 @@
+//行程選項對話框
+//提供底部上滑菜單，用戶可查看行程詳情、編輯或刪除行程
 import 'package:flutter/material.dart';
 
 import '../models/schedule_model.dart';

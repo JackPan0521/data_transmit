@@ -1,3 +1,5 @@
+//日曆頁面行程列表組件
+//顯示選定日期的行程列表，供用戶點擊進入日程表頁面，支持加載狀態顯示
 import 'package:flutter/material.dart';
 import '../models/schedule_item.dart';
 import '../../daily_schedule/daily_schedule_page.dart';

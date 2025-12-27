@@ -1,3 +1,5 @@
+//行程操作對話框
+//主要功能：封裝行程操作邏輯，提供查看詳情、編輯、刪除行程等操作的對話框
 import 'package:flutter/material.dart';
 import '../models/schedule_model.dart';
 import '../services/schedule_service.dart';

@@ -1,3 +1,5 @@
+//疲勞度追蹤選擇頁面
+//主要功能：根據 Howard Gardner 的誤元智慧理論，提供配合不同智慧領域的疲勞度追蹤、圖表展示機能
 import 'package:flutter/material.dart';
 import 'fatigue_page.dart';
 

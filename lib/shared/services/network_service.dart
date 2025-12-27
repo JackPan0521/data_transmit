@@ -1,3 +1,5 @@
+//網路服務
+//主要功能：讓應用與後端服務器通信，支持重試機制、長連接、錯誤處理
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:developer' as developer;

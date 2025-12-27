@@ -1,3 +1,6 @@
+//任務模型類
+//定義任務的數據結構，包括事件名稱、時間、持續時間和多元智慧領域等信息
+//提供 JSON 序列化和反序列化功能
 import 'package:flutter/material.dart';
 
 class TaskModel {

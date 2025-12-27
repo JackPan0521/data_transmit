@@ -1,3 +1,5 @@
+//共享行程列表組件
+//顯示選定日期的行程列表，提供詳情信息、編輯和刪除功能，支持數據篩選
 
 import 'package:flutter/material.dart';
 import '../../home_screen/models/schedule_item.dart';

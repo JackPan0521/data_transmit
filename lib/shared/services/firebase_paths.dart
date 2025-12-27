@@ -1,3 +1,5 @@
+//Firebase 路徑管理器
+//主要功能：集中管理所有 Firebase Firestore 的路徑結構，確保整應用中路徑一致
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 

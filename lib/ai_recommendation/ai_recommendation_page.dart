@@ -1,3 +1,5 @@
+//AI 推薦行程頁面
+//主要功能：讓用戶輸入行程需求，與後端 AI 服務通信獲取推薦行程，用戶可選擇和編輯推薦的任務，最後套用到日程表
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 

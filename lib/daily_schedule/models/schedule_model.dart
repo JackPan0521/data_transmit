@@ -1,3 +1,5 @@
+//行程數據模型
+//定義行程的數據結構，包含行程名稱、描述、開始時間、結束時間等信息，提供 Firestore 序列化和反序列化方法
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ScheduleModel {

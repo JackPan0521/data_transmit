@@ -1,3 +1,5 @@
+//AI 推薦理由展示組件
+//顯示 AI 給出的推薦行程的理由說明，支持展開和收合動畫效果
 import 'package:flutter/material.dart';
 
 class AIRecommendationSection extends StatelessWidget {

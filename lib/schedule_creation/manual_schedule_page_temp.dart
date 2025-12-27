@@ -1,3 +1,5 @@
+//手動行程頁面
+//主要功能：提供手動創建行程的界面，日期、時間選擇、行程描述、時間衝突檢測等功能
 import 'package:flutter/material.dart';
 
 import '../home_screen/custom_bottom_app_bar.dart';

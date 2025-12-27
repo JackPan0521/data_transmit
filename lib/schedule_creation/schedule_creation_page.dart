@@ -1,3 +1,5 @@
+//行程創建頁面
+//主要功能：提供手動創建行程的界面，用戶輸入行程基本信息（時間、名稱等），並與後端通信保存到 Firebase
 import 'package:data_transmit/widget.dart';
 import 'package:flutter/material.dart';
 

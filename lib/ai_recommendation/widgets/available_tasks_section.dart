@@ -1,3 +1,5 @@
+//可用行程選擇組件
+//展示 AI 推薦的行程列表，用戶可以點擊選擇添加到已選擇列表，提供套用按鈕將選擇的行程應用到日程表
 import 'package:flutter/material.dart';
 import '../models/task_model.dart';
 import '../utils/task_utils.dart';

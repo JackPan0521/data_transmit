@@ -1,3 +1,5 @@
+//自定義底部應用欄
+//提供應用主要功能的導航按鈕，包括新增行程、AI 推薦、疲勞度追蹤等功能，顯示應用信息和用戶 UID
 import 'package:flutter/material.dart';
 import 'package:data_transmit/fatigue/pages/flchart_fristpage.dart';
 import 'package:firebase_auth/firebase_auth.dart';

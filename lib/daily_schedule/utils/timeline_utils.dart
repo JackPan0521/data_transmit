@@ -1,3 +1,5 @@
+//時間軸工具類
+//提供時間軸視圖的計算和渲染功能，包括時間轉像素位置、行程高度計算、時間格線繪製等
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 

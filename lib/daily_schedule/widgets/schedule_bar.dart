@@ -1,3 +1,5 @@
+//行程條組件
+//顯示時間軸上的單個行程條，用戶可點擊查看詳情、編輯或刪除行程，支持時間衝突告警提示
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

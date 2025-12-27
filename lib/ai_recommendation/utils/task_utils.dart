@@ -1,3 +1,5 @@
+//任務工具類
+//提供任務相關的輔助功能，包括事件圖標映射、時間格式化和時間驗證
 import 'package:flutter/material.dart';
 
 class TaskUtils {

@@ -1,3 +1,5 @@
+//自定義日曆組件
+//提供複版日曆視圖，用戶可以選擇日期和切換視圖格式（月、週、日）
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../utils/calendar_styles.dart';

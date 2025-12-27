@@ -1,3 +1,5 @@
+//AI 推薦服務
+//與後端 AI 服務進行通信，獲取行程推薦和提交用戶選擇的任務
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/task_model.dart';

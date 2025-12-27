@@ -1,3 +1,5 @@
+//日曆 Firebase 服務
+//主要功能：從 Firestore 載入指定日期的行程列表，處理日期格式轉換和行程排序
 // ignore_for_file: avoid_print
 
 import 'package:cloud_firestore/cloud_firestore.dart';

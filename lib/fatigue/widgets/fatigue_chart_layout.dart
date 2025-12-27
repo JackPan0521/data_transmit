@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-
+/// 疲勞度圖表布局工具類
+/// 提供在不同設備尺寸和方向（橫屏/豎屏）下的圖表布局配置
+/// 包括邊距、字體大小等自適應樣式，確保圖表在各種設備上都能正確顯示
 class FatigueChartLayout {
   static bool isLandscape(BuildContext context) =>
       MediaQuery.of(context).orientation == Orientation.landscape;

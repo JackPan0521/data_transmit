@@ -1,3 +1,5 @@
+//行程 Firebase 服務
+//主要功能：與 Firestore 通信，提供載入、新增、編輯、刪除行程的功能，管理行程的時間和衝突檢測
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:developer' as developer;

@@ -1,3 +1,5 @@
+//行程內容組件
+//顯示日程表中所有行程條，支持查看詳情、編輯、刪除行程，是日程表的核心組件
 import 'package:flutter/material.dart';
 
 import '../models/schedule_model.dart';

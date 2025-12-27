@@ -1,6 +1,8 @@
+//行程項目模型
+//定義日曆頁面展示的行程項目數據結構，提供 Firebase 文檔轉換功能和時間排序能力
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-/// 行程項目數據模型
+//行程項目數據模型
 class ScheduleItem {
   final String id;              
   final String desc;

@@ -1,3 +1,5 @@
+//手動行程服務
+//主要功能：賽生日曆 Firebase 服務，提供手動新增、削除、編輯行程的操作
 import 'package:flutter/material.dart';
 import '../../home_screen/services/calendar_firebase_service.dart';
 import '../../home_screen/models/schedule_item.dart';

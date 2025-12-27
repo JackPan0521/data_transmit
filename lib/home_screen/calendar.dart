@@ -1,3 +1,5 @@
+//日曆主頁面
+//應用主頁面，展示日曆視圖，用戶可選擇日期查看和管理該日的行程，提供導航到行程創建、AI 推薦等功能
 // ignore_for_file: avoid_print
 
 import 'package:data_transmit/schedule_creation/manual_schedule_page_temp.dart';
