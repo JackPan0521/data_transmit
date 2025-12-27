@@ -102,25 +102,25 @@
 **功能**：主要功能：提供編輯行程詳情的對話框，用戶可修改行程名稱、描述、時間等，並第一線保存到 Firebase
 
 #### `daily_schedule/widgets/schedule_actions_dialog.dart` - 行程操作對話框
-**功能**：主要功能：市集商業譯輯，清濟、罪棋、編輯、刪除行程等操作的對話框
+**功能**：封裝行程操作邏輯，提供查看詳情、編輯、刪除行程等操作的對話框
 
-#### `daily_schedule/widgets/schedule_bar.dart` - 行程棧組件
-**功能**：顯示時間軸上的單個行程棧、支援點擊上下事件、複製行程時間構成，支援時間衝突告警
+#### `daily_schedule/widgets/schedule_bar.dart` - 行程條組件
+**功能**：顯示時間軸上的單個行程條，用戶可點擊查看詳情、編輯或刪除行程，支持時間衝突告警提示
 
 #### `daily_schedule/widgets/schedule_content_adaptive.dart` - 自適應行程內容組件
-**功能**：根據可用空間自動調整行程內容的顯示，支援兩欄佈局，供時間軸渲染使用
+**功能**：根據可用空間自動調整行程內容的顯示，支持多種布局方式，供時間軸渲染使用
 
 #### `daily_schedule/widgets/schedule_content.dart` - 行程內容組件
-**功能**：顯示日程表中所有行程棧、支援編輯、刪除、上下事件操作，是日程表的中子核心組件
+**功能**：顯示日程表中所有行程條，支持查看詳情、編輯、刪除行程，是日程表的核心組件
 
 #### `daily_schedule/widgets/schedule_options_dialog.dart` - 行程選項對話框
-**功能**：提供底部上滑對話框，羅列行程的推薦、編輯、刪除等操作
+**功能**：提供底部上滑菜單，用戶可查看行程詳情、編輯或刪除行程
 
-#### `daily_schedule/widgets/time_slot_widget.dart` - 時間棅組件
-**功能**：顯示時間軸上每個小時的行程，支援編輯、刪除、操作，是時間軸視圖的基本位元素
+#### `daily_schedule/widgets/time_slot_widget.dart` - 時間槽組件
+**功能**：顯示時間軸上每個小時的行程，支持編輯、刪除行程，是時間軸視圖的基本單位
 
 #### `daily_schedule/widgets/timeline_view.dart` - 時間軸視圖組件
-**功能**：顯示日程表的時間軸視圖，支援滑動瀏覽、行程編輯、時間衝突告警等
+**功能**：顯示日程表的時間軸視圖，支持滑動瀏覽、行程編輯、刪除、時間衝突警告等功能
 
 ---
 
@@ -158,16 +158,16 @@
 **功能**：主要功能：處理行程創建相關的業務邏輯，與 Firestore 通信保存新行程，支援時間格式化和導航
 
 #### `schedule_creation/services/manual_schedule_service.dart` - 手動行程服務
-**功能**：主要功能：賽生日曆 Firebase 服務，提供手動新增、刪除、編輯行程的操作
+**功能**：封裝日曆 Firebase 服務，提供手動新增、刪除、編輯行程的操作
 
 #### `schedule_creation/utils/time_utils.dart` - 時間工具類
 **功能**：提供時間計算功能，包括計算持續時間、智能調整結束時間、驗證時間範圍等功能
 
 #### `schedule_creation/manual_schedule_page_temp.dart` - 手動行程頁面
-**功能**：主要功能：提供手動創建行程的界面，支援日期、時間選擇、行程描述、衝突罪棋等功能
+**功能**：提供手動創建行程的界面，支持日期、時間選擇、行程描述、時間衝突檢測等功能
 
 #### `schedule_creation/widgets/manual_schedule_form.dart` - 手動行程表單組件
-**功能**：主要功能：供用戶輸入行程詳情、選擇時間、提交添加行程、領示衝突查警
+**功能**：供用戶輸入行程詳情、選擇開始和結束時間、提交添加行程、顯示時間衝突警告
 
 ---
 
@@ -177,13 +177,13 @@
 **功能**：主要功能：展示用戶在不同智慧領域的疲勞度數據，支援圖表展示和數據編輯保存，用於分析用戶的疲勞狀況
 
 #### `fatigue/pages/flchart_fristpage.dart` - 疲勞度追蹤選擇頁面
-**功能**：主要功能：根據 Howard Gardner 的多元智慧理論，提供配合不同智慧領域的疲勞度追蹤、圖表展示機能
+**功能**：根據 Howard Gardner 的多元智能理論，提供配合不同智能領域的疲勞度追蹤、圖表展示功能
 
 #### `fatigue/widgets/fatigue_chart.dart` - 疲勞度圖表互動組件
 **功能**：主要功能：供用戶滑動繪畫一天中每小時的疲勞度曲線、計算疲勞值、標籤、重置等功能
 
-#### `fatigue/widgets/fatigue_chart_layout.dart` - 疲勞度圖表佈局工具
-**功能**：提供寶寶寬高欄不同情況下的圖表佈局配置，包括餘白、字體大小等、支援豎亥和縱直方向
+#### `fatigue/widgets/fatigue_chart_layout.dart` - 疲勞度圖表布局工具
+**功能**：提供在不同設備尺寸和方向（橫屏/豎屏）下的圖表布局配置，包括邊距、字體大小等自適應樣式
 
 ---
 
@@ -199,7 +199,7 @@
 **功能**：主要功能：集中管理所有 Firebase Firestore 的路徑結構，確保整應用中路徑一致
 
 #### `shared/utils/schedule_filters.dart` - 行程篩選工具類
-**功能**：提供行程數據管篩功能，幫助篩選有效行程、棄卻無效數據等
+**功能**：提供行程數據管理功能，幫助篩選有效行程、過濾無效數據
 
 #### `shared/widgets/schedule_list_widget.dart` - 共享行程列表組件
 **功能**：顯示選定日期的行程列表，提供詳情信息、編輯和刪除功能，支援數據篩選
