@@ -12,6 +12,9 @@
 .swiftpm/
 migrate_working_dir/
 
+# Windows shortcuts
+*.lnk
+
 # IntelliJ related
 *.iml
 *.ipr
