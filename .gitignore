@@ -49,3 +49,40 @@ app.*.map.json
 /android/app/release
 lib/firebase_key.json
 firebase_key.json
+
+# Release packages and builds
+Release_Package/
+Release_Package.zip
+*.zip
+*.exe
+*.dll
+*.lib
+
+# Build output directories
+build/
+windows/flutter/ephemeral/
+
+# PowerShell scripts (optional - remove if you want to include them)
+*.ps1
+
+# Firebase extracted SDKs
+**/extracted/firebase_cpp_sdk_*/
+
+# Windows build artifacts
+windows/flutter/ephemeral/
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+
+# Local configuration
+local.properties
+*.properties.backup
+
+# CMake build files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+*.cmake.in
+
+# Windows specific
+Thumbs.db
+Desktop.ini

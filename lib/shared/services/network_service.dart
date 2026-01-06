@@ -5,8 +5,9 @@ import 'dart:convert';
 import 'dart:developer' as developer;
 
 class NetworkService {
-  static const String baseUrlNumber = '984b86d3c4ee';
-  static const String baseUrl = 'https://$baseUrlNumber.ngrok-free.app/api/submit';
+  static const String baseUrlNumber = '4fd874d68d73';
+  static const String baseUrl =
+      'https://$baseUrlNumber.ngrok-free.app/api/submit';
   static const int maxRetries = 3;
 
   Future<Map<String, dynamic>> sendData(Map<String, dynamic> data) async {
@@ -47,12 +48,8 @@ class NetworkService {
         await Future.delayed(const Duration(seconds: 2));
       }
     }
-    
-    return {
-      'success': false,
-      'message': '🚫 連線失敗',
-      'retryCount': maxRetries,
-    };
+
+    return {'success': false, 'message': '🚫 連線失敗', 'retryCount': maxRetries};
   }
 
   String getBaseUrlNumber() {
